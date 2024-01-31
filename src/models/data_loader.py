@@ -2,6 +2,7 @@ import bisect
 import gc
 import glob
 import random
+import os
 
 import torch
 
@@ -30,13 +31,13 @@ class Batch(object):
             tgt = torch.tensor(self._pad(pre_tgt, 0))
 
             segs = torch.tensor(self._pad(pre_segs, 0))
-            mask_src = 1 - (src == 0)
-            mask_tgt = 1 - (tgt == 0)
+            mask_src = 1 - (src == 0).type(torch.LongTensor)
+            mask_tgt = 1 - (tgt == 0).type(torch.LongTensor)
 
 
             clss = torch.tensor(self._pad(pre_clss, -1))
             src_sent_labels = torch.tensor(self._pad(pre_src_sent_labels, 0))
-            mask_cls = 1 - (clss == -1)
+            mask_cls = 1 - (clss == -1).type(torch.LongTensor)
             clss[clss == -1] = 0
             setattr(self, 'clss', clss.to(device))
             setattr(self, 'mask_cls', mask_cls.to(device))
@@ -75,22 +76,23 @@ def load_dataset(args, corpus_type, shuffle):
     assert corpus_type in ["train", "valid", "test"]
 
     def _lazy_dataset_loader(pt_file, corpus_type):
+        print("Diesen Kack laden wir", pt_file)
         dataset = torch.load(pt_file)
         logger.info('Loading %s dataset from %s, number of examples: %d' %
                     (corpus_type, pt_file, len(dataset)))
         return dataset
 
     # Sort the glob output by file name (by increasing indexes).
-    pts = sorted(glob.glob(args.bert_data_path + '.' + corpus_type + '.[0-9]*.pt'))
+    pts = sorted(glob.glob(args.bert_data_path + '.' + corpus_type + '.[0-9]*.bert.pt'))
     if pts:
         if (shuffle):
             random.shuffle(pts)
-
+        print("Hier ist der Scheiß", pts)
         for pt in pts:
             yield _lazy_dataset_loader(pt, corpus_type)
     else:
         # Only one inputters.*Dataset, simple!
-        pt = args.bert_data_path + '.' + corpus_type + '.pt'
+        pt = glob.glob(args.bert_data_path + '.' + corpus_type + '.[0-9]*.bert.pt')
         yield _lazy_dataset_loader(pt, corpus_type)
 
 

@@ -2,7 +2,7 @@ import copy
 
 import torch
 import torch.nn as nn
-from transformers import BertConfig, BertModel, DistilBertConfig, DistilBertModel
+from transformers import BertConfig, BertModel, DistilBertConfig, DistilBertModel, MobileBertModel
 from torch.nn.init import xavier_uniform_
 
 from models.decoder import TransformerDecoder
@@ -12,8 +12,9 @@ from models.optimizers import Optimizer
 ### START MODIFYING ###
 import sys
 # Add MobileBert_PyTorch
-sys.path.insert(1, '../../MobileBert_PyTorch')
-from model.modeling_mobilebert import MobileBertConfig, MobileBertModel
+#sys.path.insert(1, '../MobileBert_PyTorch')
+#print(sys.path)
+# from model.modeling_mobilebert import MobileBertConfig, MobileBertModel
 ### END MODIFYING ###
 
 def build_optim(args, model, checkpoint):
@@ -123,9 +124,9 @@ class Bert(nn.Module):
     def __init__(self, large, temp_dir, finetune=False, other_bert=None):
         super(Bert, self).__init__()
         self.other_bert = other_bert
+        print("BERT config:", large, other_bert)
         if(large):
             self.model = BertModel.from_pretrained('bert-large-uncased', cache_dir=temp_dir)
-
         ### Start Modifying ###
         elif other_bert == 'distilbert':
             self.model = DistilBertModel.from_pretrained('distilbert-base-uncased', cache_dir=temp_dir)
@@ -152,11 +153,12 @@ class Bert(nn.Module):
 
         else:
             if(self.finetune):
-                top_vec, _ = self.model(input_ids=x, token_type_ids=segs, attention_mask=mask)
+                top_vec = self.model(input_ids=x, token_type_ids=segs, attention_mask=mask).last_hidden_state
             else:
                 self.eval()
                 with torch.no_grad():
-                    top_vec, _ = self.model(input_ids=x, token_type_ids=segs, attention_mask=mask)
+                    top_vec = self.model(input_ids=x, token_type_ids=segs, attention_mask=mask).last_hidden_state
+            print("Top vec:", x)
         return top_vec
 
 
@@ -197,6 +199,7 @@ class ExtSummarizer(nn.Module):
 
     def forward(self, src, segs, clss, mask_src, mask_cls):
         top_vec = self.bert(src, segs, mask_src)
+        print("HAAAALLLLOO:", top_vec)
         sents_vec = top_vec[torch.arange(top_vec.size(0)).unsqueeze(1), clss]
         sents_vec = sents_vec * mask_cls[:, :, None].float()
         sent_scores = self.ext_layer(sents_vec, mask_cls).squeeze(-1)
@@ -242,6 +245,7 @@ class AbsSummarizer(nn.Module):
 
 
         if checkpoint is not None:
+            print("Loading checkpoint", checkpoint["model"])
             self.load_state_dict(checkpoint['model'], strict=True)
         else:
             for module in self.decoder.modules():

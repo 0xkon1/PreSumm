@@ -1,2 +1,12 @@
+# FILEPATH: /Users/elshoff/BA-Test/bert-sum/PreSumm/.gitignore
 notes.txt
 temp
+stanford-corenlp-4.5.5/
+tokenized_data/*
+raw_stories/*
+raw_data/*
+json_data/*
+bert_data/*
+models/*
+**/__pycache__/
+**/__pycache__/**

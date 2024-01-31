@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument("-task", default='ext', type=str, choices=['ext', 'abs'])
     parser.add_argument("-encoder", default='bert', type=str, choices=['bert', 'baseline'])
     parser.add_argument("-mode", default='train', type=str, choices=['train', 'validate', 'test'])
-    parser.add_argument("-bert_data_path", default='../bert_data_new/cnndm')
+    parser.add_argument("-bert_data_path", default='../bert_data/cnndm/cnndm')
     parser.add_argument("-model_path", default='../models/')
     parser.add_argument("-result_path", default='../results/cnndm')
     parser.add_argument("-temp_dir", default='../temp')
@@ -50,6 +50,8 @@ if __name__ == '__main__':
     parser.add_argument("-use_bert_emb", type=str2bool, nargs='?',const=True,default=False)
 
     parser.add_argument("-share_emb", type=str2bool, nargs='?', const=True, default=False)
+
+    
     parser.add_argument("-finetune_bert", type=str2bool, nargs='?', const=True, default=True)
     parser.add_argument("-dec_dropout", default=0.2, type=float)
     parser.add_argument("-dec_layers", default=6, type=int)
