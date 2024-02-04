@@ -48,9 +48,18 @@ if __name__ == '__main__':
 
     parser.add_argument("-mode", default='', type=str)
     parser.add_argument("-select_mode", default='greedy', type=str)
-    parser.add_argument("-map_path", default='../urls/')
+    
+    # Step 3
     parser.add_argument("-raw_path", default='../raw_stories/')
-    parser.add_argument("-save_path", default='../tokenized_data/')
+    parser.add_argument("-token_path", default='../tokenized_data/')
+
+    # Step 4
+    parser.add_argument("-map_path", default='../urls/')
+    parser.add_argument("-json_path", default='../json_data/')
+
+    # Step 5
+    parser.add_argument("-bert_path", default='../bert_data/')
+    
 
     parser.add_argument("-shard_size", default=2000, type=int)
     parser.add_argument('-min_src_nsents', default=3, type=int)
