@@ -116,26 +116,26 @@ replacing `/path/to/` with the path to where you saved the `stanford-corenlp-ful
 ####  Step 3. Sentence Splitting and Tokenization
 
 ```
-python preprocess.py -mode tokenize -raw_path RAW_PATH -save_path TOKENIZED_PATH
+python preprocess.py -mode tokenize
 ```
 
-* `RAW_PATH` is the directory containing story files (`../raw_stories`), `JSON_PATH` is the target directory to save the generated json files (`../merged_stories_tokenized`)
+* use `-raw_path` to change the directory of the raw story files, default is `../raw_stories/`. Use `-token_path` to change the directory the tokenized data should be saved in, default is  `../tokenized_data`.
 
 
 ####  Step 4. Format to Simpler Json Files
  
 ```
-python preprocess.py -mode format_to_lines -raw_path RAW_PATH -save_path JSON_PATH -n_cpus 1 -use_bert_basic_tokenizer false -map_path MAP_PATH
+python preprocess.py -mode format_to_lines -save_path ../json_data/cnndm -n_cpus 1 -use_bert_basic_tokenizer false 
 ```
 
-* `RAW_PATH` is the directory containing tokenized files (`../merged_stories_tokenized`), `JSON_PATH` is the target directory to save the generated json files (`../json_data/cnndm`), `MAP_PATH` is the  directory containing the urls files (`../urls`)
+* `-token_path` is the directory containing tokenized files, default is`../token_data`. `-json_path` is the target directory to save the generated json files, default is `../json_data/`. `-map_path` is the  directory containing the urls files, default is `../urls`.
 
 ####  Step 5. Format to PyTorch Files
 ```
-python preprocess.py -mode format_to_bert -raw_path JSON_PATH -save_path BERT_DATA_PATH  -lower -n_cpus 1 -log_file ../logs/preprocess.log
+python preprocess.py -mode format_to_bert -raw_path ../json_data/cnndm -lower -n_cpus 1 -log_file ../logs/preprocess.log
 ```
 
-* `JSON_PATH` is the directory containing json files (`../json_data`), `BERT_DATA_PATH` is the target directory to save the generated binary files (`../bert_data`)
+* `-json_path` is the directory containing json files, default is `../json_data`. `-bert_path` is the target directory to save the generated binary files, default is `../bert_data`.
 
 ## Model Training
 
