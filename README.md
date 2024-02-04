@@ -132,7 +132,7 @@ python preprocess.py -mode format_to_lines -json_path ../json_data/cnndm -n_cpus
 
 ####  Step 5. Format to PyTorch Files
 ```
-python preprocess.py -mode format_to_bert -raw_path ../json_data/cnndm -lower -n_cpus 1 -log_file ../logs/preprocess.log
+python preprocess.py -mode format_to_bert -json_path ../json_data/cnndm -lower -n_cpus 1 -log_file ../logs/preprocess.log
 ```
 
 * `-json_path` is the directory containing json files, default is `../json_data`. `-bert_path` is the target directory to save the generated binary files, default is `../bert_data`.
