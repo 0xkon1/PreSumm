@@ -125,7 +125,7 @@ python preprocess.py -mode tokenize
 ####  Step 4. Format to Simpler Json Files
  
 ```
-python preprocess.py -mode format_to_lines -save_path ../json_data/cnndm -n_cpus 1 -use_bert_basic_tokenizer false 
+python preprocess.py -mode format_to_lines -json_path ../json_data/cnndm -n_cpus 1 -use_bert_basic_tokenizer false 
 ```
 
 * `-token_path` is the directory containing tokenized files, default is`../token_data`. `-json_path` is the target directory to save the generated json files, default is `../json_data/`. `-map_path` is the  directory containing the urls files, default is `../urls`.
